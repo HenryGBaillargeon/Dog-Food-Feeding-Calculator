@@ -11,8 +11,6 @@ public class Dog {
         List<String> dogNames = new ArrayList<>();
 
 
-        System.out.print("Welcome to the Dog Simulation Program!");
-
 
 
         // Keep asking for dogs names until the user concludes input
