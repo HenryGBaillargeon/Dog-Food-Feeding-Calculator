@@ -1,23 +1,20 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        // Welcome Message
-        System.out.println("_____________________________________________");
-        System.out.println("Welcome to the Dog Food Feeding Calculator");
-        System.out.println("_____________________________________________");
+        StringBuilder summary = new StringBuilder(); // To build the feeding summary text
 
         // Step 1: Get Owner Info
         System.out.print("Owner's Name: ");
         String ownerName = scanner.nextLine();
-        System.out.println("_____________________________________________");
 
         System.out.print("Owner's Contact Number: ");
         String ownerContact = scanner.nextLine();
-        System.out.println("_____________________________________________");
 
         // Step 2: Select Activity Level
         String activityLevel = selectActivityLevel(scanner);
@@ -28,7 +25,6 @@ public class Main {
         // Step 3: Ask for number of dogs
         System.out.print("\nHow many dogs do you have? ");
         int numDogs = scanner.nextInt();
-        System.out.println("_____________________________________________");
         scanner.nextLine(); // Consume leftover newline
 
         ArrayList<Dog> dogs = new ArrayList<>();
@@ -36,18 +32,15 @@ public class Main {
         // Step 4: Gather Dog Details
         for (int i = 0; i < numDogs; i++) {
             System.out.println("\nEnter details for Dog #" + (i + 1));
-            System.out.println("_____________________________________________");
 
             System.out.print("Dog's Name: ");
             String dogName = scanner.nextLine();
 
             System.out.print("Dog's Age (in years): ");
             double dogAge = scanner.nextDouble();
-            System.out.println("_____________________________________________");
 
             System.out.print("Dog's Weight (in pounds): ");
             double dogWeight = scanner.nextDouble();
-            System.out.println("_____________________________________________");
             scanner.nextLine(); // Consume leftover newline
 
             // Select Dog Food Brand
@@ -58,34 +51,42 @@ public class Main {
             dogs.add(dog);
         }
 
-        // Step 5: Print Summary
-        System.out.println("\n--- Feeding Summary ---");
-        System.out.println("_____________________________________________");
+        // Step 5: Build Feeding Summary with visual spacing lines
+        summary.append("__________________________________\n");
+        summary.append("--- Feeding Summary ---\n");
+        summary.append("__________________________________\n");
 
-        // Owner Details
-        System.out.println("Owner Information:");
-        System.out.println(owner);
-        System.out.println("_____________________________________________");
+        // Owner Information
+        summary.append("Owner Information:\n");
+        summary.append(owner).append("\n");
+        summary.append("__________________________________\n");
 
-        // Dog Details and Feeding Information
+        // Dog Information and Feeding Details
         for (Dog dog : dogs) {
-            System.out.println("Dog Information:");
-            System.out.println(dog);
-            System.out.println("_____________________________________________");
-
             String size = DogFood.getSize(dog.getWeight());
             double servingSize = DogFood.calculateServingSize(size, dog.getAge(), dog.getFoodBrand());
 
-            System.out.println("Feeding Information:");
-            System.out.println("Size: " + size);
-            System.out.println("Recommended Serving: " + servingSize + " cups/day");
-            System.out.println("_____________________________________________");
+            summary.append("Dog Information:\n");
+            summary.append(dog).append("\n");
+            summary.append("__________________________________\n");
+            summary.append("Feeding Information:\n");
+            summary.append("Size: ").append(size).append("\n");
+            summary.append("Recommended Serving: ").append(servingSize).append(" cups/day\n");
+            summary.append("__________________________________\n");
         }
+
+        System.out.println(summary); // Print feeding summary to console
+
+        // Ask the user to name the .txt file
+        System.out.print("\nEnter a name for the summary file (without extension): ");
+        String fileName = scanner.nextLine() + ".txt";
+
+        // Save summary to the specified file
+        saveToFile(fileName, summary.toString());
 
         scanner.close();
     }
 
-    // Function to display activity level options and get user input
     public static String selectActivityLevel(Scanner scanner) {
         while (true) {
             System.out.println("\nSelect your activity level:");
@@ -96,7 +97,6 @@ public class Main {
 
             System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
-            System.out.println("_____________________________________________");
             scanner.nextLine(); // Consume leftover newline
 
             switch (choice) {
@@ -114,7 +114,6 @@ public class Main {
         }
     }
 
-    // Function to display dog food brand options and get user input
     public static String selectDogFoodBrand(Scanner scanner) {
         while (true) {
             System.out.println("\nSelect your dog's food brand:");
@@ -125,7 +124,6 @@ public class Main {
 
             System.out.print("Enter your choice (1-4): ");
             int choice = scanner.nextInt();
-            System.out.println("_____________________________________________");
             scanner.nextLine(); // Consume leftover newline
 
             switch (choice) {
@@ -140,6 +138,15 @@ public class Main {
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
             }
+        }
+    }
+
+    public static void saveToFile(String fileName, String content) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            writer.write(content);
+            System.out.println("\nSummary successfully saved to " + fileName);
+        } catch (IOException e) {
+            System.err.println("An error occurred while saving the summary: " + e.getMessage());
         }
     }
 }
