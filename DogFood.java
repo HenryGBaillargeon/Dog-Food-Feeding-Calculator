@@ -1,46 +1,45 @@
 public class DogFood {
 
-    private final String dogName;
-    private final double dogAge; // Dog's age in years.
-    private final double dogWeight; // Dog's weight in pounds
-    private final String brand; // Dog foood brand;
-
-
-    public DogFood(String dogName, double dogAge, double dogWeight, String brand) {
-        this.dogName = dogName;
-        this.dogAge = dogAge;
-        this.dogWeight = dogWeight;
-        this.brand = brand;
-    }
-
-    public String getDogName() {
-dogName; }
-
-    public String getSize() {
-        if (dogWeight < 25) {
+    public static String getSize(double weight) {
+        if (weight <= 20) {
             return "Small";
-        } else if (dogWeight < 50) {
+        } else if (weight <= 50) {
             return "Medium";
         } else {
             return "Large";
         }
-
     }
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public double calculateservingSize() {
-        String size = getSize();
+    public static double calculateServingSize(String size, double age, String brand) {
+        double serving;
 
         switch (brand.toLowerCase()) {
-            case "Purina":
-                if (size.equalsIgnoreCase("Small"))
-                    return (dogAge <= 1) ? 0.5 : 1.0;
-                else if (size.equalsIgnoreCase("Medium"))
-                    return (dogAge <= 1) ? 1.0 : 1.5;
-                else return (dogAge <= 1) ? 1.5 : 2.5;
+            case "purina":
+            case "royal canin":
+            case "hill science":
+                if (size.equals("Small")) {
+                    serving = (age <= 1) ? 0.5 : 1.0;
+                } else if (size.equals("Medium")) {
+                    serving = (age <= 1) ? 1.0 : 1.5;
+                } else {
+                    serving = (age <= 1) ? 1.5 : 2.5;
+                }
+                break;
+
+            case "natura":
+                if (size.equals("Small")) {
+                    serving = (age <= 1) ? 0.4 : 0.8;
+                } else if (size.equals("Medium")) {
+                    serving = (age <= 1) ? 0.9 : 1.3;
+                } else {
+                    serving = (age <= 1) ? 1.4 : 2.2;
+                }
+                break;
+
+            default:
+                serving = 0.0;
         }
 
+        return serving;
+    }
 }
